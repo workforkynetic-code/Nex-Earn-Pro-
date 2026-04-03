@@ -294,7 +294,7 @@ class FirebaseService {
       await _db
           .ref('${FirebasePaths.user(userData.referredByUid)}/verified_invites')
           .runTransaction((current) {
-        return Transaction.success((current ?? 0) as int + 1);
+        return Transaction.success(((current ?? 0) as int) + 1);
       });
     }
   }
