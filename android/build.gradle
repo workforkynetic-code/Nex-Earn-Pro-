@@ -1,19 +1,12 @@
-// File: android/build.gradle
-// Kaam: Android project ka root build file
-// Firebase plugin aur Kotlin version yahan set hoti hai
-
 buildscript {
     ext.kotlin_version = '1.9.22'
     repositories {
         google()
         mavenCentral()
     }
-
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.0'
+        classpath 'com.android.tools.build:gradle:8.1.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        // Firebase Google Services plugin — google-services.json process karta hai
-        classpath 'com.google.gms:google-services:4.4.1'
     }
 }
 
@@ -27,8 +20,6 @@ allprojects {
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(':app')
 }
 
