@@ -1,34 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- File: android/app/src/main/AndroidManifest.xml -->
-<!-- Kaam: Android app ke permissions, activities, aur settings -->
-<!-- Internet, network state permission — Firebase, Ads ke liye zaroori -->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- ═══ Permissions ═══════════════════════════════════════════════════ -->
-    
-    <!-- Internet access — Firebase, Unity Ads, WebView ke liye -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    
-    <!-- Network state check karo — offline detection ke liye -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    
-    <!-- Notifications (optional — local notifications ke liye) -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    
-    <!-- Device ID access (security fingerprinting ke liye) -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-
     <application
         android:label="Nex Earn Pro"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:allowBackup="false"
-        android:fullBackupContent="false"
-        android:usesCleartextTraffic="true">
-        
-        <!-- Main Flutter Activity -->
+        android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -37,63 +13,16 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
-            
-            <!-- App open karne ka intent -->
-            <intent-filter android:autoVerify="true">
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"/>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            
-            <!-- Deep link support — referral links ke liye -->
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <!-- nexearnpro.vercel.app/register?ref=CODE jaise links handle karo -->
-                <data
-                    android:scheme="https"
-                    android:host="nexearnpro.vercel.app"
-                    android:pathPrefix="/register"/>
-            </intent-filter>
         </activity>
-        
-        <!-- Splash screen theme (Flutter default) -->
         <meta-data
-            android:name="io.flutter.embedding.android.NormalTheme"
-            android:resource="@style/NormalTheme"/>
-            
-        <!-- Unity Ads ke liye zaroori activity -->
-        <activity
-            android:name="com.unity3d.ads.adunit.AdUnitActivity"
-            android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
-            android:exported="false"
-            android:hardwareAccelerated="true"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
-            
-        <activity
-            android:name="com.unity3d.ads.adunit.AdUnitTransparentActivity"
-            android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
-            android:exported="false"
-            android:hardwareAccelerated="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-            
-        <activity
-            android:name="com.unity3d.ads.adunit.AdUnitTransparentSoftwareActivity"
-            android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
-            android:exported="false"
-            android:hardwareAccelerated="false"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-            
-        <activity
-            android:name="com.unity3d.ads.adunit.AdUnitSoftwareActivity"
-            android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
-            android:exported="false"
-            android:hardwareAccelerated="false"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
-            
-        <!-- Google Sign-In ke liye -->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:name="flutterEmbedding"
+            android:value="2"/>
     </application>
 </manifest>
