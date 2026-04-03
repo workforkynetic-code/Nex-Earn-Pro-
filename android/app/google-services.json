@@ -1,0 +1,56 @@
+{
+  "_README": "⚠️ YEH FILE PLACEHOLDER HAI — REAL FILE NEECHE LIKHE STEPS SE BANAO",
+  "_INSTRUCTIONS": [
+    "STEP 1: Firebase Console kholo → https://console.firebase.google.com",
+    "STEP 2: Project 'nex-earn-pro-d89be' select karo",
+    "STEP 3: Project Settings (gear icon) → General tab",
+    "STEP 4: 'Your apps' section mein 'Add app' → Android icon click karo",
+    "STEP 5: Android package name daalo: com.nexearnpro.app",
+    "STEP 6: App nickname: Nex Earn Pro",
+    "STEP 7: SHA-1 key (optional for now, required for Google Sign-In)",
+    "       Run: keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android",
+    "STEP 8: 'Register app' click karo",
+    "STEP 9: 'google-services.json' download karo",
+    "STEP 10: Yeh placeholder file delete karo",
+    "STEP 11: Downloaded google-services.json ko android/app/ folder mein rakho",
+    "",
+    "⚠️ IMPORTANT: android/app/google-services.json hona chahiye, NOT project root mein",
+    "",
+    "FOR GOOGLE SIGN-IN:",
+    "- Firebase Console → Authentication → Sign-in method → Google enable karo",
+    "- SHA-1 fingerprint add karna zaroori hai",
+    "- Release build ke liye release keystore ka SHA-1 bhi add karo"
+  ],
+  "project_info": {
+    "project_number": "830525311885",
+    "project_id": "nex-earn-pro-d89be",
+    "storage_bucket": "nex-earn-pro-d89be.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830525311885:android:REPLACE_WITH_REAL_ID",
+        "android_client_info": {
+          "package_name": "com.nexearnpro.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "830525311885-REPLACE_WITH_REAL_CLIENT_ID.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAo8iVfFMaxY7vnA2NjD5mop5DqAuGY8yU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

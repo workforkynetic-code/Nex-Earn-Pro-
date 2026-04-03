@@ -1,0 +1,159 @@
+# File: .github/workflows/build.yml
+# Kaam: GitHub pe push karne par automatically APK build karta hai
+# APK artifact ke roop mein GitHub Actions se download kar sakte ho
+# Release tag push karne par GitHub Release bhi create hoti hai
+
+name: 🚀 Build & Release APK
+
+on:
+  push:
+    branches:
+      - main        # Main branch pe push hone par build
+    tags:
+      - 'v*.*.*'    # v1.0.0 jaisi tags pe Release bhi banta hai
+  pull_request:
+    branches:
+      - main        # PR pe bhi build test karo
+
+jobs:
+  build:
+    name: Build Release APK
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Code checkout karo
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Java 17 setup karo (Flutter Android ke liye zaroori)
+      - name: ☕ Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Step 3: Flutter 3.19.0 setup karo
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+          channel: 'stable'
+          cache: true  # Flutter cache karo faster builds ke liye
+
+      # Step 4: Flutter version confirm karo
+      - name: 📋 Flutter Version
+        run: flutter --version
+
+      # Step 5: Dependencies install karo
+      - name: 📦 Install Dependencies
+        run: flutter pub get
+
+      # Step 6: Code analysis (optional but good practice)
+      - name: 🔍 Analyze Code
+        run: flutter analyze --no-fatal-infos
+        continue-on-error: true  # Analysis fail hone par bhi build continue karo
+
+      # Step 7: Unit tests chalao (agar hain)
+      - name: 🧪 Run Tests
+        run: flutter test
+        continue-on-error: true
+
+      # Step 8: APK build karo (Release mode)
+      - name: 🔨 Build Release APK
+        run: |
+          flutter build apk \
+            --release \
+            --no-shrink \
+            --build-name=1.0.0 \
+            --build-number=${{ github.run_number }}
+
+      # Step 9: APK ko rename karo with version info
+      - name: 📝 Rename APK
+        run: |
+          mv build/app/outputs/flutter-apk/app-release.apk \
+             build/app/outputs/flutter-apk/NexEarnPro-v1.0.${{ github.run_number }}-release.apk
+
+      # Step 10: APK artifact ke roop mein upload karo
+      # GitHub Actions → Artifacts section se download kar sakte ho
+      - name: 📤 Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NexEarnPro-APK-Build-${{ github.run_number }}
+          path: build/app/outputs/flutter-apk/NexEarnPro-v1.0.${{ github.run_number }}-release.apk
+          retention-days: 30  # 30 din tak artifact available rahega
+
+      # Step 11: Build success info print karo
+      - name: ✅ Build Complete
+        run: |
+          echo "=========================================="
+          echo "✅ APK Build Successful!"
+          echo "Build Number: ${{ github.run_number }}"
+          echo "Download from: Actions → Artifacts"
+          echo "=========================================="
+          ls -la build/app/outputs/flutter-apk/
+
+  # Separate release job - sirf tag push karne par chalega
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: build  # Pehle build job complete hona chahiye
+    if: startsWith(github.ref, 'refs/tags/v')  # Sirf v* tags pe
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ☕ Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Install Dependencies
+        run: flutter pub get
+
+      - name: 🔨 Build Release APK for Release
+        run: |
+          flutter build apk \
+            --release \
+            --build-name=${{ github.ref_name }}
+
+      - name: 📝 Rename APK for Release
+        run: |
+          mv build/app/outputs/flutter-apk/app-release.apk \
+             build/app/outputs/flutter-apk/NexEarnPro-${{ github.ref_name }}.apk
+
+      # GitHub Release create karo aur APK attach karo
+      - name: 🎉 Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Nex Earn Pro ${{ github.ref_name }}
+          body: |
+            ## 🚀 Nex Earn Pro ${{ github.ref_name }}
+            
+            ### What's New
+            - Daily earning features
+            - Watch ads & earn coins
+            - Spin wheel & scratch card
+            - Invite friends & earn rewards
+            - Withdrawal system
+            
+            ### Installation
+            1. Download the APK file below
+            2. Enable "Install from unknown sources" on Android
+            3. Install and enjoy earning!
+            
+            ### Requirements
+            - Android 5.0+ (API 21+)
+          files: build/app/outputs/flutter-apk/NexEarnPro-${{ github.ref_name }}.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

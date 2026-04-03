@@ -1,0 +1,99 @@
+// File: android/app/build.gradle
+// Kaam: Android app ka build configuration
+// Package name, SDK version, Firebase, signing config sab yahan hota hai
+
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"  // Firebase ke liye zaroori
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+android {
+    namespace "com.nexearnpro.app"
+    compileSdk flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        // Package name — Firebase Console mein yahi name use karo
+        applicationId "com.nexearnpro.app"
+        minSdkVersion 21           // Android 5.0+
+        targetSdkVersion flutter.targetSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true       // Large app ke liye zaroori
+    }
+
+    // Release signing (production APK ke liye)
+    // TODO: Apna keystore banao aur yahan add karo
+    signingConfigs {
+        debug {
+            // Debug signing automatic hoti hai
+        }
+        release {
+            // Production release ke liye:
+            // 1. Keystore banao: keytool -genkey -v -keystore release.keystore -alias nexearnpro -keyalg RSA -keysize 2048 -validity 10000
+            // 2. Neeche values fill karo
+            // keyAlias 'nexearnpro'
+            // keyPassword 'YOUR_KEY_PASSWORD'
+            // storeFile file('release.keystore')
+            // storePassword 'YOUR_STORE_PASSWORD'
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+        }
+        release {
+            signingConfig signingConfigs.debug  // TODO: release ke liye signingConfigs.release use karo
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:multidex:1.0.3'
+    
+    // Firebase BoM (Bill of Materials) — versions auto-match hoti hain
+    implementation platform('com.google.firebase:firebase-bom:32.7.2')
+    implementation 'com.google.firebase:firebase-analytics'
+}
