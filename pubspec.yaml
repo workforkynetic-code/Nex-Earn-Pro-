@@ -17,7 +17,7 @@ dependencies:
   google_sign_in: ^6.2.1
 
   # Ads
-  unity_ads_plugin: ^4.9.3
+  unity_ads_plugin: ^4.9.0
 
   # WebView
   webview_flutter: ^4.4.4
